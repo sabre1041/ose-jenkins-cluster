@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "jenkins-cluster-ephemeral",
+        "name": "jenkins-cluster-persistent",
         "annotations": {
             "description": "Jenkins cluster example",
             "iconClass": "icon-jenkins",
@@ -113,7 +113,7 @@
                     "dockerStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "jenkins:latest",
+                            "name": "${JENKINS_IMAGE_TAG}",
                             "namespace": "openshift"
                         }
                     }
@@ -125,6 +125,9 @@
                     }
                 },
                 "triggers": [
+		            {
+		                "type": "ConfigChange"
+		            },
                     {
                         "type": "ImageChange",
                         "imageChange": {}
@@ -166,6 +169,9 @@
                     }
                 },
                 "triggers": [
+		            {
+		                "type": "ConfigChange"
+		            },
                     {
                         "type": "ImageChange",
                         "imageChange": {}
@@ -185,6 +191,23 @@
                 "to": {
                     "kind": "Service",
                     "name": "${APPLICATION_NAME}"
+                }
+            }
+        },
+        {
+            "kind": "PersistentVolumeClaim",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${APPLICATION_NAME}"
+            },
+            "spec": {
+                "accessModes": [
+                    "ReadWriteOnce"
+                ],
+                "resources": {
+                    "requests": {
+                        "storage": "${VOLUME_CAPACITY}"
+                    }
                 }
             }
         },
@@ -235,10 +258,26 @@
                             {
                                 "name": "${APPLICATION_NAME}",
                                 "image": "${APPLICATION_NAME}",
+                                "ports": [
+                                    {
+                                        "name": "web",
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "slave",
+                                        "containerPort": 50000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
                                 "env": [
                                     {
                                         "name": "JENKINS_PASSWORD",
                                         "value": "${JENKINS_PASSWORD}"
+                                    },
+                                    {
+                                        "name": "JAVA_OPTS",
+                                        "value": "-Dhudson.slaves.NodeProvisioner.recurrencePeriod=${SLAVE_RECCURENCE_PERIOD},-Dhudson.slaves.NodeProvisioner.initialDelay=100,-Dhudson.slaves.NodeProvisioner.MARGIN=100"
                                     }
                                 ],
                                 "resources": {},
@@ -260,11 +299,13 @@
                         "volumes": [
                             {
                                 "name": "${APPLICATION_NAME}-data",
-                                "emptyDir": {
-                                    "medium": ""
+                                "persistentVolumeClaim": {
+                                    "claimName": "${APPLICATION_NAME}"
                                 }
                             }
                         ],
+                        "serviceAccount": "${JENKINS_SERVICE_ACCOUNT}",
+                        "serviceAccountName": "${JENKINS_SERVICE_ACCOUNT}",
                         "restartPolicy": "Always",
                         "dnsPolicy": "ClusterFirst"
                     }
@@ -333,18 +374,6 @@
 		                    {
 		                        "name": "${APPLICATION_NAME}-slave",
 		                        "image": "${APPLICATION_NAME}-slave",
-                                "ports": [
-                                    {
-                                        "name": "web",
-                                        "containerPort": 8080,
-                                        "protocol": "TCP"
-                                    },
-                                    {
-                                        "name": "slave",
-                                        "containerPort": 50000,
-                                        "protocol": "TCP"
-                                    }
-                                ],
                                 "env": [
                                     {
                                         "name": "JENKINS_PASSWORD",
@@ -394,6 +423,16 @@
             "generate": "expression"
         },
         {
+            "name": "JENKINS_SERVICE_ACCOUNT",
+            "description": "OpenShift Service account for Jenkins",
+            "value": "default"
+        },
+        {
+            "name": "JENKINS_IMAGE_TAG",
+            "description": "Base OpenShift Jenkins Image Tag",
+            "value": "jenkins:1.609-15"
+        },
+        {
             "name": "GIT_URI",
             "description": "Git Repository",
             "value": "https://github.com/sabre1041/ose-jenkins-cluster.git"
@@ -407,9 +446,21 @@
             "name": "EXECUTORS",
             "description": "Number of executors per slave agent",
             "value": "1"
+        },
+        {
+            "name": "SLAVE_RECCURENCE_PERIOD",
+            "description": "Interval of time to check whether to provision additional slave nodes",
+            "value": "500"
+        },
+        {
+            "name": "VOLUME_CAPACITY",
+            "description": "Volume space available for data, e.g. 512Mi, 2Gi",
+            "value": "512Mi",
+            "required": true
         }
+
     ],
     "labels": {
-        "template": "jenkins-cluster-ephemeral"
+        "template": "jenkins-cluster-persistent"
     }
 }
