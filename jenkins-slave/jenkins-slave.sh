@@ -4,7 +4,30 @@ master_username=${JENKINS_USERNAME:-"admin"}
 master_password=${JENKINS_PASSWORD:-"password"}
 slave_executors=${EXECUTORS:-"1"}
 
-if [[ $# -lt 1 ]] || [[ "$1" == "-"* ]]; then
+
+
+# If JENKINS_SECRET and JENKINS_JNLP_URL are present, run JNLP slave
+if [ ! -z $JENKINS_SECRET ] && [ ! -z $JENKINS_JNLP_URL ]; then
+
+    echo "Running Jenkins JNLP Slave...."
+	JAR=`ls -1 /opt/jenkins-slave/bin/slave.jar | tail -n 1`
+
+	# if -tunnel is not provided try env vars
+	if [[ "$@" != *"-tunnel "* ]]; then
+		if [[ ! -z "$JENKINS_TUNNEL" ]]; then
+			TUNNEL="-tunnel $JENKINS_TUNNEL"
+		fi
+	fi
+
+	if [[ ! -z "$JENKINS_URL" ]]; then
+		URL="-url $JENKINS_URL"
+	fi
+
+	exec java $JAVA_OPTS -cp /usr/share/jenkins/slave.jar hudson.remoting.jnlp.Main -headless $TUNNEL $URL -jar-cache $HOME "$@"
+
+elif [[ $# -lt 1 ]] || [[ "$1" == "-"* ]]; then
+
+  echo "Running Jenkins Swarm Plugin...."
 
   # jenkins swarm slave
   JAR=`ls -1 /opt/jenkins-slave/bin/swarm-client-*.jar | tail -n 1`
@@ -15,6 +38,5 @@ if [[ $# -lt 1 ]] || [[ "$1" == "-"* ]]; then
 
   echo Running java $JAVA_OPTS -jar $JAR -fsroot $HOME $PARAMS "$@"
   exec java $JAVA_OPTS -jar $JAR -fsroot $HOME $PARAMS "$@"
-fi
 
-exec "$@"
+fi
