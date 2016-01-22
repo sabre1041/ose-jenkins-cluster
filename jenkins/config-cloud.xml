@@ -1,0 +1,26 @@
+  <clouds>
+    <org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud plugin="kubernetes@0.5">
+      <name>slave</name>
+      <templates>
+        <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+          <name></name>
+          <image>172.30.124.220:5000/jenkins/jenkins-slave</image>
+          <privileged>false</privileged>
+          <command></command>
+          <args></args>
+          <remoteFs>/opt/jenkins-slave</remoteFs>
+          <instanceCap>2147483647</instanceCap>
+          <label></label>
+          <volumes/>
+        </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+      </templates>
+      <serverUrl>https://openshift.default.svc.cluster.local</serverUrl>
+      <skipTlsVerify>true</skipTlsVerify>
+      <namespace>jenkins</namespace>
+      <jenkinsUrl>http://jenkins.jenkins.svc.cluster.local:8080</jenkinsUrl>
+      <jenkinsTunnel>jenkins-slave.jenkins.svc.cluster.local:50000</jenkinsTunnel>
+      <credentialsId>kubernetes</credentialsId>
+      <containerCap>10</containerCap>
+      <retentionTimeout>5</retentionTimeout>
+    </org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud>
+  </clouds>
