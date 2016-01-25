@@ -256,6 +256,10 @@
                                     {
                                         "name": "JENKINS_PASSWORD",
                                         "value": "${JENKINS_PASSWORD}"
+                                    },
+                                    {
+                                        "name": "JAVA_OPTS",
+                                        "value": "-Dhudson.slaves.NodeProvisioner.recurrencePeriod=${SLAVE_RECCURENCE_PERIOD},-Dhudson.slaves.NodeProvisioner.initialDelay=100,-Dhudson.slaves.NodeProvisioner.MARGIN=100"
                                     }
                                 ],
                                 "resources": {},
@@ -268,6 +272,7 @@
                                 "terminationMessagePath": "/dev/termination-log",
                                 "imagePullPolicy": "Always",
                                 "capabilities": {},
+                                "serviceAccount": "${JENKINS_SERVICE_ACCOUNT}",
                                 "securityContext": {
                                     "capabilities": {},
                                     "privileged": false
@@ -411,6 +416,11 @@
             "generate": "expression"
         },
         {
+            "name": "JENKINS_SERVICE_ACCOUNT",
+            "description": "OpenShift Service account for Jenkins",
+            "value": "default"
+        },
+        {
             "name": "GIT_URI",
             "description": "Git Repository",
             "value": "https://github.com/sabre1041/ose-jenkins-cluster.git"
@@ -424,6 +434,11 @@
             "name": "EXECUTORS",
             "description": "Number of executors per slave agent",
             "value": "1"
+        },
+        {
+            "name": "SLAVE_RECCURENCE_PERIOD",
+            "description": "Interval of time to check whether to provision additional slave nodes",
+            "value": "500"
         },
         {
             "name": "VOLUME_CAPACITY",
