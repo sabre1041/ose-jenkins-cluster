@@ -3,11 +3,16 @@ FROM registry.access.redhat.com/rhel7/rhel
 ENV JENKINS_SWARM_VERSION 2.0
 ENV JNLP_SLAVE_VERSION 2.52
 ENV HOME /opt/jenkins-slave
+ENV MAVEN_VERSION 3.3.3
+ENV JAVA_HOME /usr/lib/jvm/java
 
-RUN yum install -y git tar zip unzip java-1.8.0-openjdk && \
+RUN yum install -y git tar zip unzip which java-1.8.0-openjdk-devel && \
     yum clean all && \
     useradd -u 1001 -r -m -d ${HOME} -s /sbin/nologin -c "Jenkins Slave" jenkins-slave && \
-    mkdir -p /opt/jenkins-slave/bin /var/lib/jenkins
+    mkdir -p /opt/jenkins-slave/bin /var/lib/jenkins && \
+    curl -fsSL http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
+      && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
+      && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
 # Copy script
 COPY jenkins-slave.sh /opt/jenkins-slave/bin/
