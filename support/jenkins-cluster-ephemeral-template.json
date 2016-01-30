@@ -125,6 +125,9 @@
                     }
                 },
                 "triggers": [
+		            {
+		                "type": "ConfigChange"
+		            },
                     {
                         "type": "ImageChange",
                         "imageChange": {}
@@ -166,6 +169,9 @@
                     }
                 },
                 "triggers": [
+		            {
+		                "type": "ConfigChange"
+		            },
                     {
                         "type": "ImageChange",
                         "imageChange": {}
@@ -406,7 +412,7 @@
         {
             "name": "JENKINS_IMAGE_TAG",
             "description": "Base OpenShift Jenkins Image Tag",
-            "value": "jenkins-1-rhel7:1.609-15"
+            "value": "jenkins:1.609-15"
         },
         {
             "name": "GIT_URI",
