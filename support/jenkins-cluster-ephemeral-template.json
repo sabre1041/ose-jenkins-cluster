@@ -113,7 +113,7 @@
                     "dockerStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "jenkins:latest",
+                            "name": "${JENKINS_IMAGE_TAG}",
                             "namespace": "openshift"
                         }
                     }
@@ -235,6 +235,18 @@
                             {
                                 "name": "${APPLICATION_NAME}",
                                 "image": "${APPLICATION_NAME}",
+                                "ports": [
+                                    {
+                                        "name": "web",
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "slave",
+                                        "containerPort": 50000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
                                 "env": [
                                     {
                                         "name": "JENKINS_PASSWORD",
@@ -338,18 +350,6 @@
 		                    {
 		                        "name": "${APPLICATION_NAME}-slave",
 		                        "image": "${APPLICATION_NAME}-slave",
-                                "ports": [
-                                    {
-                                        "name": "web",
-                                        "containerPort": 8080,
-                                        "protocol": "TCP"
-                                    },
-                                    {
-                                        "name": "slave",
-                                        "containerPort": 50000,
-                                        "protocol": "TCP"
-                                    }
-                                ],
                                 "env": [
                                     {
                                         "name": "JENKINS_PASSWORD",
@@ -402,6 +402,11 @@
             "name": "JENKINS_SERVICE_ACCOUNT",
             "description": "OpenShift Service account for Jenkins",
             "value": "default"
+        },
+        {
+            "name": "JENKINS_IMAGE_TAG",
+            "description": "Base OpenShift Jenkins Image Tag",
+            "value": "jenkins-1-rhel7:1.609-15"
         },
         {
             "name": "GIT_URI",
