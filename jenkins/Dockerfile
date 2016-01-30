@@ -10,8 +10,8 @@ RUN mkdir -p /opt/openshift/plugins && \
 		  curl -sSL -f https://updates.jenkins-ci.org/download/plugins/credentials/1.24/credentials.hpi -o /opt/openshift/plugins/credentials.jpi && \
 		  curl -sSL -f https://updates.jenkins-ci.org/download/plugins/kubernetes/0.5/kubernetes.hpi -o /opt/openshift/plugins/kubernetes.jpi && \
 		  touch /opt/openshift/plugins/credentials.jpi.pinned && \
-		  sed -i "s|<slaveAgentPort>.*</slaveAgentPort>|<slaveAgentPort>50000</slaveAgentPort>|" "/opt/openshift/configuration/config.xml.tpl" && \
-		  sed -i "s|<numExecutors>.*</numExecutors>|<numExecutors>0</numExecutors>|" "/opt/openshift/configuration/config.xml.tpl" && \
-		  sed -i "/<slaves\/>/r /opt/openshift/config-cloud.xml" "/opt/openshift/configuration/config.xml.tpl" && \
+		  sed -i "s|<slaveAgentPort>.*</slaveAgentPort>|<slaveAgentPort>50000</slaveAgentPort>|" "/opt/openshift/configuration/config.xml" && \
+		  sed -i "s|<numExecutors>.*</numExecutors>|<numExecutors>0</numExecutors>|" "/opt/openshift/configuration/config.xml" && \
+		  sed -i "/<slaves\/>/r /opt/openshift/config-cloud.xml" "/opt/openshift/configuration/config.xml" && \
 		  chmod -R og+rw /opt/openshift/plugins && \
 		  rm -rf /opt/openshift/config-cloud.xml /opt/openshift/credentials.xml
