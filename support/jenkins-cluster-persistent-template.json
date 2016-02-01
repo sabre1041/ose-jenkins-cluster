@@ -290,7 +290,6 @@
                                 "terminationMessagePath": "/dev/termination-log",
                                 "imagePullPolicy": "Always",
                                 "capabilities": {},
-                                "serviceAccount": "${JENKINS_SERVICE_ACCOUNT}",
                                 "securityContext": {
                                     "capabilities": {},
                                     "privileged": false
@@ -305,6 +304,8 @@
                                 }
                             }
                         ],
+                        "serviceAccount": "${JENKINS_SERVICE_ACCOUNT}",
+                        "serviceAccountName": "${JENKINS_SERVICE_ACCOUNT}",
                         "restartPolicy": "Always",
                         "dnsPolicy": "ClusterFirst"
                     }
