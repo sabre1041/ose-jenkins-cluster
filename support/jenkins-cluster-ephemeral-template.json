@@ -45,7 +45,10 @@
             "apiVersion": "v1",
             "metadata": {
                 "name": "${APPLICATION_NAME}",
-                "creationTimestamp": null
+                "creationTimestamp": null,
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                }
             },
             "spec": {
                 "ports": [
@@ -70,7 +73,10 @@
             "apiVersion": "v1",
             "metadata": {
                 "name": "${APPLICATION_NAME}-slave",
-                "creationTimestamp": null
+                "creationTimestamp": null,
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                }
             },
             "spec": {
                 "ports": [
@@ -199,7 +205,10 @@
             "apiVersion": "v1",
             "metadata": {
                 "name": "${APPLICATION_NAME}",
-                "creationTimestamp": null
+                "creationTimestamp": null,
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                }
             },
             "spec": {
                 "strategy": {
@@ -365,6 +374,10 @@
                                     {
                                         "name": "EXECUTORS",
                                         "value": "${EXECUTORS}"
+                                    },
+                                    {
+                                        "name": "JENKINS_CONTEXT_PATH",
+                                        "value": ""
                                     }
                                 ],
 		                        "resources": {},

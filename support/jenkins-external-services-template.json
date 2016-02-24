@@ -1,0 +1,101 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "jenkins-external-services",
+        "annotations": {
+            "description": "Jenkins External Services.",
+            "iconClass": ""
+        }
+    },
+    "objects": [
+		{
+		  "kind": "Endpoints",
+		  "apiVersion": "v1",
+		  "metadata": {
+		    "name": "${JENKINS_SERVICE_NAME}"
+		  },
+		  "subsets": [
+		    {
+		      "addresses":  [
+		        { "IP": "${JENKINS_IP}" }
+		      ],
+		      "ports":  [
+		        { "port": 8080, "name": "${JENKINS_SERVICE_NAME}" }
+		      ]
+		    }
+		  ]
+		},
+		{
+		  "kind": "Service",
+		  "apiVersion": "v1",
+		  "metadata": {
+		    "name": "${JENKINS_SERVICE_NAME}"
+		  },
+		  "spec": {
+		    "ports": [
+		      {
+		        "name": "${JENKINS_SERVICE_NAME}",
+		        "protocol": "TCP",
+		        "port": 8080,
+		        "targetPort": 8080,
+		        "nodePort": 0
+		      }
+		    ]
+		  },
+		  "selector": {} 
+		},
+		{
+		  "kind": "Endpoints",
+		  "apiVersion": "v1",
+		  "metadata": {
+		    "name": "${JENKINS_SERVICE_NAME}-slave"
+		  },
+		  "subsets": [
+		    {
+		      "addresses":  [
+		        { "IP": "${JENKINS_IP}" }
+		      ],
+		      "ports":  [
+		        { "port": 50000, "name": "${JENKINS_SERVICE_NAME}-slave" }
+		      ]
+		    }
+		  ]
+		},
+		{
+		  "kind": "Service",
+		  "apiVersion": "v1",
+		  "metadata": {
+		    "name": "${JENKINS_SERVICE_NAME}-slave"
+		  },
+		  "spec": {
+		    "ports": [
+		      {
+		        "name": "${JENKINS_SERVICE_NAME}-slave",
+		        "protocol": "TCP",
+		        "port": 50000,
+		        "targetPort": 50000,
+		        "nodePort": 0
+		      }
+		    ]
+		  },
+		  "selector": {} 
+		}     
+    ],
+    "parameters": [
+        {
+            "name": "JENKINS_SERVICE_NAME",
+            "description": "Name of the Jenkins Service.",
+            "displayName": "Jenkins Service Name",
+            "value": "jenkins"
+        },
+        {
+            "name": "JENKINS_IP",
+            "description": "IP Address for the External PCC.",
+            "required": true
+        }
+    ],
+    "labels": {
+        "template": "jenkins-external-services"
+    }
+}
