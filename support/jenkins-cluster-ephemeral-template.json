@@ -40,6 +40,16 @@
 				"dockerImageRepository": "registry.access.redhat.com/rhel7/rhel"
 			}
 		},
+		{
+		    "kind": "ImageStream",
+		    "apiVersion": "v1",
+		    "metadata": {
+		        "name": "ose-jenkins"
+		    },
+			"spec": {
+				"dockerImageRepository": "registry.access.redhat.com/openshift3/jenkins-1-rhel7"
+			}
+		},
         {
             "kind": "Service",
             "apiVersion": "v1",
@@ -119,8 +129,7 @@
                     "dockerStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "${JENKINS_IMAGE_TAG}",
-                            "namespace": "openshift"
+                            "name": "${JENKINS_IMAGE_TAG}"
                         }
                     }
                 },
@@ -426,7 +435,7 @@
         {
             "name": "JENKINS_IMAGE_TAG",
             "description": "Base OpenShift Jenkins Image Tag",
-            "value": "jenkins:1.609-15"
+            "value": "ose-jenkins:1.609-15"
         },
         {
             "name": "GIT_URI",
