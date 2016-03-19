@@ -63,7 +63,7 @@ Alternatively, you can choose to utilize a separate service account to run the J
    
 The jenkins service account will be created. Now add the *system:deployer* role to this account as show previously for the default service account:
 
-     oc policy add-role-to-user system:deployer system:serviceaccount:jenkins:default 
+     oc policy add-role-to-user system:deployer system:serviceaccount:jenkins:jenkins 
 
 Subsequent sections will illustrate how to leverage this account
 
