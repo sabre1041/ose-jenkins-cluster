@@ -53,17 +53,17 @@ Each template contains several parameters that can be modified to modify and tai
 
 One of the methods running Jenkins jobs in this project is to dynamically provision slave instances in OpenShift using the Kubernetes plugin. Jenkins communicates with OpenShift using a secured value stored as [Credentials](https://wiki.jenkins-ci.org/display/JENKINS/Credentials+Plugin). By default, the Jenkins instance is configured to leverage the API token from a service account that is injected into pods by default. The default service account for a pod does not have the adequate permissions necessary to fully provision a slave instance. 
 
-Add the **system:deployer** role to the default service account 
+Add the **edit** role to the default service account
 
-     oc policy add-role-to-user system:deployer system:serviceaccount:jenkins:default
+     oc policy add-role-to-user edit system:serviceaccount:jenkins:default
 
 Alternatively, you can choose to utilize a separate service account to run the Jenkins master. The *support* folder contains a service account called **jenkins** that can be added to the project. To instantiate the service account, execute the following command from within the support folder:
 
     oc create -f jenkins.json
    
-The jenkins service account will be created. Now add the *system:deployer* role to this account as show previously for the default service account:
+The jenkins service account will be created. Now add the *edit* role to this account as shown previously for the default service account:
 
-     oc policy add-role-to-user system:deployer system:serviceaccount:jenkins:default 
+     oc policy add-role-to-user edit system:serviceaccount:jenkins:jenkins
 
 Subsequent sections will illustrate how to leverage this account
 
