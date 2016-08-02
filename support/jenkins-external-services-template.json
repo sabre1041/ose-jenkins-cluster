@@ -18,7 +18,7 @@
 		  "subsets": [
 		    {
 		      "addresses":  [
-		        { "IP": "${JENKINS_IP}" }
+		        { "ip": "${JENKINS_IP}" }
 		      ],
 		      "ports":  [
 		        { "port": 8080, "name": "${JENKINS_SERVICE_NAME}" }
@@ -54,7 +54,7 @@
 		  "subsets": [
 		    {
 		      "addresses":  [
-		        { "IP": "${JENKINS_IP}" }
+		        { "ip": "${JENKINS_IP}" }
 		      ],
 		      "ports":  [
 		        { "port": 50000, "name": "${JENKINS_SERVICE_NAME}-slave" }
